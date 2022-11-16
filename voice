@@ -1,0 +1,38 @@
+import cv2
+import pyttsx3 
+from pyzbar.pyzbar import decode
+from gtts import gTTS
+from io import BytesIO
+import os
+import re
+import webbrowser
+cam = cv2.VideoCapture(0)
+p = pyttsx3.init()
+mp3_fp = BytesIO()
+cam.set(5,640)
+cam.set(6,480)
+camera = True
+myData = None
+while camera == True:
+    success, img = cam.read()
+    myData = None
+    cv2.imshow("result",img)
+    for barcode in decode(img):
+        myData = barcode.data.decode('utf-8')
+        if myData!=None:
+            print(myData)
+            try:
+                link = re.search("(?P<url>https?://[^\s]+)", myData).group("url")
+                webbrowser.open(link)
+                camera=False
+                break
+            except:
+                print(myData)
+                tts = gTTS(myData,lang='en',tld='co.in')
+                tts.save("QR.mp3")
+                os.system("QR.mp3")
+    if cv2.waitKey(1) == 27:
+        camera=False
+        cam.release()
+        break
+cv2.destroyAllWindows()
