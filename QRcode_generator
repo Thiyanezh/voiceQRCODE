@@ -1,0 +1,16 @@
+# Importing library
+import qrcode
+import cv2
+from matplotlib import pyplot as plt
+# Data to be encoded
+file_path = 'C:/Users/VIJAY/Documents/qr.txt'
+with open(file_path) as file:
+    f = file.read()
+# Encoding data using make() function
+ig = qrcode.make(f)
+ig.save("QR_code.png")
+img = cv2.imread('D:/Coding/QR_code.png', 0)
+print(img)
+cv2.imshow('D:/Coding/QR_code.png', img)
+cv2.waitKey(10000)
+cv2.destroyAllWindows()
